@@ -3,50 +3,76 @@
 
 using namespace std;
 
-string queueArr[MAX];
+// Arrays storing patient info
+string nameArr[MAX];
+int ageArr[MAX];
+string reasonArr[MAX];
+
+// Queue pointers
 int frontIndex = 0;
 int rearIndex = -1;
 
+// Check if the queue is full
 bool isFull() {
     return rearIndex == MAX - 1;
 }
 
+// Check if queue is empty
 bool isEmpty() {
     return frontIndex > rearIndex;
 }
 
-void enqueue(const string &name) {
+// Add a new patient
+void enqueue(string name, int age, string reason) {
     if (isFull()) {
         cout << "Queue is full! Cannot add more patients.\n";
         return;
     }
 
-    rearIndex++;
-    queueArr[rearIndex] = name;
+    rearIndex++; // Move rear forward
 
-    cout << "Patient '" << name << "' added. Priority number: " 
-         << (rearIndex + 1) << endl;
+    nameArr[rearIndex] = name;
+    ageArr[rearIndex] = age;
+    reasonArr[rearIndex] = reason;
+
+    cout << "Patient added successfully!\n";
 }
 
+// Serve a patient
 void dequeue() {
     if (isEmpty()) {
-        cout << "No patients to serve.\n";
+        cout << "\nNo patients in queue!\n";
         return;
     }
 
-    cout << "Serving patient: " << queueArr[frontIndex] << endl;
-    frontIndex++;
+    cout << "\nServing patient:\n";
+    cout << "Name: " << nameArr[frontIndex] << "\n";
+    cout << "Age: " << ageArr[frontIndex] << "\n";
+    cout << "Reason: " << reasonArr[frontIndex] << "\n";
+
+    frontIndex++; // Move front to the next patient
+
+    // RESET queue when empty
+    if (frontIndex > rearIndex) {
+        frontIndex = 0;
+        rearIndex = -1;
+    }
 }
 
-void display() {
+// Show all patients currently waiting
+void displayQueue() {
     if (isEmpty()) {
-        cout << "No patients in the queue.\n";
+        cout << "\nNo patients in queue!\n";
         return;
     }
 
-    cout << "\n--- Current Queue ---\n";
+    cout << "\nCurrent Queue:\n";
+
     for (int i = frontIndex; i <= rearIndex; i++) {
-        cout << (i + 1) << ". " << queueArr[i] << endl;
+        cout << i - frontIndex + 1 << ". "
+             << nameArr[i]
+             << " | Age: " << ageArr[i]
+             << " | Reason: " << reasonArr[i]
+             << "\n";
     }
-    cout << "----------------------\n";
 }
