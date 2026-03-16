@@ -14,12 +14,12 @@ int rearIndex = -1;
 
 // Check if the queue is full
 bool isFull() {
-    return rearIndex == MAX - 1;
+    return (rearIndex + 1) % MAX == frontIndex;
 }
 
 // Check if queue is empty
 bool isEmpty() {
-    return frontIndex > rearIndex;
+    return frontIndex == (rearIndex + 1) % MAX;
 }
 
 // Add a new patient
@@ -29,7 +29,7 @@ void enqueue(string name, int age, string reason) {
         return;
     }
 
-    rearIndex++; // Move rear forward
+    rearIndex = (rearIndex + 1) % MAX; // Move rear forward with wrapping
 
     nameArr[rearIndex] = name;
     ageArr[rearIndex] = age;
@@ -50,13 +50,7 @@ void dequeue() {
     cout << "Age: " << ageArr[frontIndex] << "\n";
     cout << "Reason: " << reasonArr[frontIndex] << "\n";
 
-    frontIndex++; // Move front to the next patient
-
-    // RESET queue when empty
-    if (frontIndex > rearIndex) {
-        frontIndex = 0;
-        rearIndex = -1;
-    }
+    frontIndex = (frontIndex + 1) % MAX; // Move front to next patient with wrapping
 }
 
 // Show all patients currently waiting
@@ -68,11 +62,13 @@ void displayQueue() {
 
     cout << "\nCurrent Queue:\n";
 
-    for (int i = frontIndex; i <= rearIndex; i++) {
-        cout << i - frontIndex + 1 << ". "
+    int count = 1;
+    for (int i = frontIndex; i != (rearIndex + 1) % MAX; i = (i + 1) % MAX) {
+        cout << count << ". "
              << nameArr[i]
              << " | Age: " << ageArr[i]
              << " | Reason: " << reasonArr[i]
              << "\n";
+        count++;
     }
 }
